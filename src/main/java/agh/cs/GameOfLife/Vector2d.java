@@ -5,8 +5,8 @@ import java.util.Objects;
 import static java.lang.Math.*;
 
 public class Vector2d {
-    public final int x;
-    public final int y;
+    public int x;
+    public int y;
 
     public Vector2d(int x, int y) {
         this.x = x;
@@ -17,6 +17,13 @@ public class Vector2d {
         return "(" + x + ", " + y + ")";
     }
 
+    public void setX(int x){
+        this.x = x;
+    }
+
+    public void setY(int y){
+        this.y = y;
+    }
     @Override
     public int hashCode() {
         return Objects.hash(x, y);

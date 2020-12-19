@@ -75,7 +75,7 @@ public class GrassField extends AbstractWorldMap {
         if(grasses.containsKey(position)) {
             object = grasses.get(position);
         }
-        // mozna zrobic ladniej
+
         if(animals.containsKey(position)){
             object = animals.get(position).get(0);
         }
@@ -105,7 +105,7 @@ public class GrassField extends AbstractWorldMap {
                 .boxed()
                 .collect(Collectors.toList());
         Collections.shuffle(randomList);
-        for (int i = 0; i < numberOfGrass; i++) {
+        for (int i = 0; i < (int)numberOfGrass/10; i++) {
             Vector2d v = new Vector2d(randomList.get(i)/size,randomList.get(i)%size);
             grasses.put(v,new Grass(v));
         }
@@ -114,43 +114,44 @@ public class GrassField extends AbstractWorldMap {
         grasses.put(grass.getPosition(), grass);
     }
 
-//
-//    @Override
-//    public void run(MoveDirection[] directions) {
-//        Animal[] animals = getAnimals().values().toArray(new Animal[0]);
-//        for (int i = 0; i < directions.length; i++) {
-//            Animal animal = animals[i % animals.length];
-//            Vector2d position = animal.getPosition();
-//            getAnimals().remove(position);
-//            animal.move(directions[i]);
-//            if(animal.getEnergy() > 0) {
-//                getAnimals().put(animal.getPosition(), animal);
-//                if(grasses.containsKey(animal.getPosition())){
-//                    grasses.remove(animal.getPosition());
-//                    animal.setEnergy(animal.getEnergy() + animal.getPlantEnergy());
-//                }
-//
-//            }
-//
-//
-//        }
-//
-//    }
-
-    private void eatGrass(Animal animal){
-        if(grasses.containsKey(animal.getPosition())){
-            ArrayList<Animal> animalsAtTheSamePosition = animals.get(animal.getPosition());
-            int maxEnergy = Integer.MIN_VALUE;
-            Animal strongestAnimal = animal;
-            for (Animal a: animalsAtTheSamePosition) {
-                if (a.getEnergy() > maxEnergy){
-                    maxEnergy = a.getEnergy();
-                    strongestAnimal = a;
-                }
-            }
-            grasses.remove(animal.getPosition());
-            strongestAnimal.setEnergy(strongestAnimal.getEnergy() + strongestAnimal.getPlantEnergy());
+    public void jungle(){
+        int size = (int) sqrt(5 * numberOfGrass);
+        List<Integer> randomList1 = IntStream.range(7, size)
+                .boxed()
+                .collect(Collectors.toList());
+        List<Integer> randomList2 = IntStream.range(7, size)
+                .boxed()
+                .collect(Collectors.toList());
+        Collections.shuffle(randomList1);
+        Collections.shuffle(randomList2);
+        for (int i = 0; i < 5; i++) {
+            Vector2d v = new Vector2d(randomList1.get(i),randomList2.get(i));
+            System.out.println("jungle" + v);
+            grasses.put(v,new JungleGrass(v));
         }
+    }
+
+
+
+    public void eatGrass(){
+        HashMap<Vector2d, ArrayList<Animal>> animalCopy = new HashMap<Vector2d, ArrayList<Animal>>(animals);
+        for (Map.Entry<Vector2d, ArrayList<Animal>> entry : animalCopy.entrySet()){
+            ArrayList<Animal> arrayCopy = new ArrayList<Animal>(entry.getValue());
+            for (Animal animal: arrayCopy) {
+                if (grasses.containsKey(animal.getPosition())) {
+                    ArrayList<Animal> animalsAtTheSamePosition = animals.get(animal.getPosition());
+                    int maxEnergy = Integer.MIN_VALUE;
+                    Animal strongestAnimal = animal;
+                    for (Animal a : animalsAtTheSamePosition) {
+                        if (a.getEnergy() > maxEnergy) {
+                            maxEnergy = a.getEnergy();
+                            strongestAnimal = a;
+                        }
+                    }
+                    grasses.remove(animal.getPosition());
+                    strongestAnimal.setEnergy(strongestAnimal.getEnergy() + strongestAnimal.getPlantEnergy());
+                }
+            }    }
     }
     @Override
     public void movement (){
@@ -168,16 +169,22 @@ public class GrassField extends AbstractWorldMap {
                     if(getAnimals().containsKey(animal.getPosition())){
                         getAnimals().get(animal.getPosition()).add(animal);
                     }
-                    getAnimals().put(animal.getPosition(), new ArrayList<Animal>(){{add(animal);}});
+                    else{
+                        getAnimals().put(animal.getPosition(), new ArrayList<Animal>(){{add(animal);}});
+                     }
                 }
             }
         }
-        System.out.println(animals);
+//        System.out.println(animals);
     }
 
-    public Animal fff(int i, int j){
+    public IMapElement fff(int i, int j){
         if (animals.containsKey(new Vector2d(i,j))){
             return animals.get(new Vector2d(i,j)).get(0);
+        }
+        else if(grasses.containsKey(new Vector2d(i, j))) {
+            return grasses.get(new Vector2d(i, j));
+
         }
         return null;
     }
@@ -186,6 +193,18 @@ public class GrassField extends AbstractWorldMap {
     public void positionChanged(Vector2d oldPosition, Vector2d newPosition) {
 
     }
+    public int number0fAnimals() {
+        int x = 0;
+
+        for (Map.Entry<Vector2d, ArrayList<Animal>> entry : animals.entrySet()) {
+            ArrayList<Animal> animal = entry.getValue();
+            for (Animal a : animal) {
+                x += 1;
+
+            }
+        }
+        return x;
 
 
+    }
 }

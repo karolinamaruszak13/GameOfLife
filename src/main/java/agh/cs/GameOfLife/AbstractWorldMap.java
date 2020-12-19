@@ -51,8 +51,7 @@ abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObserver {
                         }
                     }
                 }
-                System.out.println(strongestAnimal1.getEnergy());
-                System.out.println(strongestAnimal2.getEnergy());
+
                 if(strongestAnimal1.getEnergy() >= 0.5*strongestAnimal1.getStartEnergy() && strongestAnimal2.getEnergy() >= 0.5*strongestAnimal2.getStartEnergy()){
                     Animal childAnimal = new Animal(this, strongestAnimal1.getPosition(), MapDirection.NORTH, (int)(0.25*strongestAnimal1.getEnergy() + 0.25*strongestAnimal2.getEnergy()), strongestAnimal1.getMoveEnergy(), strongestAnimal1.getPlantEnergy());
 

@@ -32,18 +32,22 @@ class JEBACPIS extends JPanel{
             graphics.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
         }
         else if (element.equals("animal")){
-            graphics.setColor(Color.blue);
+            graphics.setColor(new Color(114, 57, 6));
+            graphics.fillRect(0, 0, getWidth() - 1, getHeight() - 1);
+        }
+        else if (element.equals("JungleGrass")){
+            graphics.setColor(new Color(1, 36, 16));
             graphics.fillRect(0, 0, getWidth() - 1, getHeight() - 1);
         }
         else if(element.equals("grass")){
-            graphics.setColor(Color.yellow);
+            graphics.setColor(new Color(7, 104, 29));
             graphics.fillRect(0, 0, getWidth() - 1, getHeight() - 1);
         }
 
     }
-    public void setElement(Animal animal){
-        if (animal != null){
-            this.element = animal.getElement();
+    public void setElement(IMapElement element){
+        if (element != null){
+            this.element = element.getElement();
         }
         else {
             this.element = null;
@@ -53,6 +57,8 @@ class JEBACPIS extends JPanel{
 
 
 }
+
+
 
 class Pane extends WindowAdapter{
     Pane(JPanel p){
@@ -73,11 +79,12 @@ public class World {
 //        JSONObject a = (JSONObject) jsonParser.parse(new FileReader("parameters.json"));
 //        System.out.println(a.get("name"));
 //        View v = new View();
-        GrassField map1 = new GrassField(10);
-        Animal a = new Animal(map1, new Vector2d(10,10),NORTH, 3, 0, 4 );
-        Animal b = new Animal(map1, new Vector2d(10,10),NORTH, 3, 0, 4 );
-        map1.placeAnimal(a);
-        map1.placeAnimal(b);
+        GrassField map1 = new GrassField(30);
+
+        for (int i=0; i<15; i++){
+            map1.placeAnimal(new Animal(map1, new Vector2d(10,12),NORTH, 1000, 10, 4 ));
+        }
+
 
 
 
@@ -94,21 +101,26 @@ public class World {
         }
         gui.setPreferredSize(new Dimension(1000, 1000));
         ActionListener actionListener = (ActionEvent actionEvent) -> {
-            map1.reproduction();
             map1.movement();
+            map1.reproduction();
+            map1.eatGrass();
+            map1.placeGrass();
+            map1.jungle();
+
             for (int ii = 0; ii < s; ii++) {
                 for (int jj = 0; jj < s; jj++) {
                     biosphere[ii][jj].setElement(map1.fff(ii,jj));
                 }
             }
             gui.repaint();
-            System.out.println("oo");
+            System.out.println(map1.number0fAnimals());
+
 
         };
         Timer timer = new Timer(1000, actionListener);
         timer.start();
-//        Pane p = new Pane(gui);
-        JOptionPane.showMessageDialog(null, gui);
+        Pane p = new Pane(gui);
+//        JOptionPane.showMessageDialog(null, gui);
 
 
 

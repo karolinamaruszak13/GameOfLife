@@ -1,6 +1,5 @@
 package agh.cs.GameOfLife;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 
@@ -43,52 +42,58 @@ public class Animal implements IMapElement {
         for (int i = 0; i < genes.length; i++) {
             genes[i] = (int)(Math.random() * (max - min + 1) + min);
         }
-        System.out.println(Arrays.toString(genes));
+
     }
 
     public boolean equals(Object other){
         return this.toString().equals(other.toString());
     }
 
-//    public Animal move(MoveDirection direction){
-//        if (direction == RIGHT && map.canMoveTo(orientation.next().toUnitVector())){
-//            orientation = orientation.next();
-//        }
-//        else if(direction == LEFT && map.canMoveTo(orientation.previous().toUnitVector())){
-//            orientation = orientation.previous();
-//        }
-//
-//        else if (direction == FORWARD && map.canMoveTo(position.add(orientation.toUnitVector()))){
-//            position = position.add(orientation.toUnitVector());
-//        }
-//        else if(direction == BACKWARD && map.canMoveTo(position.subtract(orientation.toUnitVector()))){
-//            position = position.subtract(orientation.toUnitVector());
-//        }
-//        if (position.x < 0){
-//            position = position.add(new Vector2d(map.getWidth()+1,0));
-//        }
-//        else if (position.x >= map.getWidth()+1){
-//            position = position.subtract(new Vector2d(map.getWidth()+1,0));
-//        }
-//        if (position.y < 0){
-//            position = position.add(new Vector2d(0,map.getHeight()+1));
-//        }
-//        else if (position.y >= map.getHeight()+1){
-//            position = position.subtract(new Vector2d(0,map.getHeight()+1));
-//        }
-//        energy -= moveEnergy;
-//        return new Animal(map, position, orientation, energy , moveEnergy, plantEnergy);
-//    }
 
     public void move(){
-//        System.out.println("Aktualna orientacja i pozycja: " + orientation + " " + position);
         int number_of_rotates = genes[new Random().nextInt(genes.length)];
         for( int i=0; i < number_of_rotates; i++){
             orientation = orientation.next();
         }
         position = position.add(orientation.toUnitVector());
+        int width = 20;
+        int height = 20;
+
+        //lewy gorny
+        if (position.x < 0 && position.y < 0){
+            position = position.add(new Vector2d(width, height));
+        }
+        //lewy dolny
+        else if (position.x < 0 && position.y > height){
+            position = position.add(new Vector2d(width, 0 ));
+            position = position.subtract(new Vector2d(0, height));
+        }
+        //prawy dolny
+        else if (position.x > width && position.y > height){
+            position = position.subtract(new Vector2d(width, height));
+
+        }
+        //prawy gorny
+        else if (position.x > width && position.y < 0){
+            position = position.subtract(new Vector2d(width, 0 ));
+            position = position.add(new Vector2d(0, height));
+        }
+
+        else if (position.x < 0 ){
+            position = position.add(new Vector2d(width + 1,0));
+        }
+        else if (position.x >= width ){
+            position = position.subtract(new Vector2d(width +1,0));
+        }
+        if (position.y < 0){
+            position = position.add(new Vector2d(0,height + 1));
+        }
+        else if (position.y >= height){
+            position = position.subtract(new Vector2d(0,height + 1));
+        }
+
         energy -= moveEnergy;
-//        System.out.println("Aktualna orientacja i pozycja: " + orientation + " " + position + " " + number_of_rotates);
+
 
     }
 
