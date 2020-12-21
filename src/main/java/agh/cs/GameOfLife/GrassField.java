@@ -7,10 +7,23 @@ import static java.lang.Math.sqrt;
 
 public class GrassField extends AbstractWorldMap {
     public int numberOfGrass;
+    public int width;
+    public int height;
+    public double jungleRatio;
     Map<Vector2d,Grass> grasses;
     public GrassField(int numberOfGrass) {
         this.numberOfGrass = numberOfGrass;
         this.grasses = new LinkedHashMap<>();
+        placeGrass();
+
+    }
+
+    public GrassField(int width, int height, double jungleRatio) {
+        this.width = width;
+        this.height = height;
+        this.numberOfGrass = (int)(width * height * 0.3);
+        this.grasses = new LinkedHashMap<>();
+        this.jungleRatio = jungleRatio;
         placeGrass();
 
     }
@@ -91,12 +104,12 @@ public class GrassField extends AbstractWorldMap {
 
     @Override
     public int getWidth() {
-        return 1000;
+        return width;
     }
 
     @Override
     public int getHeight() {
-        return 1000;
+        return height;
     }
 
     public void placeGrass() {
@@ -116,17 +129,19 @@ public class GrassField extends AbstractWorldMap {
 
     public void jungle(){
         int size = (int) sqrt(5 * numberOfGrass);
-        List<Integer> randomList1 = IntStream.range(7, size)
+        int squareWidth =(int) Math.floor((double)getWidth() * jungleRatio);
+        int squareHeight = (int)(getHeight() * jungleRatio);
+
+        List<Integer> randomList1 = IntStream.range(((getHeight() - squareHeight) / 2), ((getHeight() + squareHeight) / 2))
                 .boxed()
                 .collect(Collectors.toList());
-        List<Integer> randomList2 = IntStream.range(7, size)
+        List<Integer> randomList2 = IntStream.range(((getHeight() - squareHeight) / 2), ((getHeight() + squareHeight) / 2))
                 .boxed()
                 .collect(Collectors.toList());
         Collections.shuffle(randomList1);
         Collections.shuffle(randomList2);
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < Math.min(squareWidth, squareHeight); i++) {
             Vector2d v = new Vector2d(randomList1.get(i),randomList2.get(i));
-            System.out.println("jungle" + v);
             grasses.put(v,new JungleGrass(v));
         }
     }

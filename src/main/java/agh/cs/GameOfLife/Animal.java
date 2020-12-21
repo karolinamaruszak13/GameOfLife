@@ -56,8 +56,8 @@ public class Animal implements IMapElement {
             orientation = orientation.next();
         }
         position = position.add(orientation.toUnitVector());
-        int width = 20;
-        int height = 20;
+        int width = map.getWidth();
+        int height = map.getHeight();
 
         //lewy gorny
         if (position.x < 0 && position.y < 0){
