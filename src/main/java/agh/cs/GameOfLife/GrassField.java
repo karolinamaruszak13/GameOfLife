@@ -21,7 +21,7 @@ public class GrassField extends AbstractWorldMap {
     public GrassField(int width, int height, double jungleRatio) {
         this.width = width;
         this.height = height;
-        this.numberOfGrass = (int)(width * height * 0.3);
+        this.numberOfGrass = (int)Math.sqrt(width * height * 0.05);
         this.grasses = new LinkedHashMap<>();
         this.jungleRatio = jungleRatio;
         placeGrass();
@@ -72,13 +72,17 @@ public class GrassField extends AbstractWorldMap {
     }
 
     public void placeGrass() {
-        int size = (int) sqrt(10 * numberOfGrass);
-        List<Integer> randomList = IntStream.range(0, (size + 1) * size)
+
+        List<Integer> randomList1 = IntStream.range(0, getWidth())
                 .boxed()
                 .collect(Collectors.toList());
-        Collections.shuffle(randomList);
-        for (int i = 0; i < (int)numberOfGrass/10; i++) {
-            Vector2d v = new Vector2d(randomList.get(i)/size,randomList.get(i)%size);
+        List<Integer> randomList2 = IntStream.range(0, getHeight())
+                .boxed()
+                .collect(Collectors.toList());
+        Collections.shuffle(randomList1);
+        Collections.shuffle(randomList2);
+        for (int i = 0; i < numberOfGrass; i++) {
+            Vector2d v = new Vector2d(randomList1.get(i),randomList2.get(i));
             grasses.put(v,new Grass(v));
         }
     }
@@ -105,7 +109,21 @@ public class GrassField extends AbstractWorldMap {
         }
     }
 
+    public String meanEnergy(){
+        int sum = 0;
+        double mean = 0;
+        int amount = 0;
+        for (Map.Entry<Vector2d, ArrayList<Animal>> entry : animals.entrySet()){
+            ArrayList<Animal> animal = entry.getValue();
+            for (Animal a: animal) {
+                sum += a.getEnergy();
+                amount += 1;
+            }
+        }
 
+        mean = (double)sum / amount;
+        return String.valueOf(mean);
+    }
 
     public void eatGrass(){
         HashMap<Vector2d, ArrayList<Animal>> animalCopy = new HashMap<Vector2d, ArrayList<Animal>>(animals);
@@ -127,18 +145,25 @@ public class GrassField extends AbstractWorldMap {
                 }
             }    }
     }
-    public String getGenes(){
-        String gen = "";
-        HashMap<Vector2d, ArrayList<Animal>> animalCopy = new HashMap<Vector2d, ArrayList<Animal>>(animals);
-        for (Map.Entry<Vector2d, ArrayList<Animal>> entry : animalCopy.entrySet()) {
-            ArrayList<Animal> arrayCopy = new ArrayList<Animal>(entry.getValue());
-            for (Animal animal : arrayCopy) {
-                gen = animal.genes();
+    public String getTheMostDominantGen(){
+        HashMap<List<Integer>, Integer> genesCounter = new HashMap<List<Integer>, Integer>();
+        for (Map.Entry<Vector2d, ArrayList<Animal>> entry : animals.entrySet()) {
+            ArrayList<Animal> animal = entry.getValue();
+            for (Animal a : animal) {
+                List<Integer> gene = a.getGenes();
+                if(genesCounter.containsKey(gene)){
+                    genesCounter.put(gene, genesCounter.get(gene) +1);
+                }
+                else{
+                    genesCounter.put(gene, 1);
+                }
+
             }
         }
-        return gen;
-    }
 
+        return String.valueOf(genesCounter.entrySet().stream().max((entry1, entry2) -> Integer.compare(entry1.getValue(), entry2.getValue())).get().getKey());
+
+    }
 
     @Override
     public void movement (){
@@ -194,11 +219,8 @@ public class GrassField extends AbstractWorldMap {
     }
 
     public String numberOfGrasses(){
-        int x = 0;
-        for (Map.Entry<Vector2d, Grass> entry : grasses.entrySet()) {
-            x += 1;
-        }
-        return String.valueOf(x);
+
+        return String.valueOf(grasses.size());
 
     }
 }

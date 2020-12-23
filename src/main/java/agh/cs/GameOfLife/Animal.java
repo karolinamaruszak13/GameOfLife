@@ -1,6 +1,6 @@
 package agh.cs.GameOfLife;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 
@@ -13,7 +13,7 @@ public class Animal implements IMapElement {
     private int startEnergy;
     private int moveEnergy;
     private int plantEnergy;
-    private int[] genes;
+    private List<Integer> genes;
 
    public Animal(){
 
@@ -37,26 +37,39 @@ public class Animal implements IMapElement {
         this.startEnergy = startEnergy;
         this.moveEnergy = moveEnergy;
         this.plantEnergy = plantEnergy;
-        genes = new int[32];
+        genes = new ArrayList<>();
         int min = 0;
         int max = 7;
-        for (int i = 0; i < genes.length; i++) {
-            genes[i] = (int)(Math.random() * (max - min + 1) + min);
+        for (int i = 0; i < 32; i++) {
+            genes.add((int) (Math.random() * (max - min + 1) + min));
 
         }
 
 
     }
 
+    public Animal(IWorldMap map, Vector2d position, MapDirection orientation, int startEnergy, int moveEnergy, int plantEnergy, List<Integer> genes){
+        this.map = map;
+        this.position = position;
+        this.orientation = orientation;
+        this.energy = startEnergy;
+        this.startEnergy = startEnergy;
+        this.moveEnergy = moveEnergy;
+        this.plantEnergy = plantEnergy;
+        this.genes = genes;
+        int min = 0;
+        int max = 7;
+    }
+
     public boolean equals(Object other){
         return this.toString().equals(other.toString());
     }
 
-    public String genes(){
-       return Arrays.toString(genes);
+    public List<Integer> getGenes(){
+       return genes;
     }
     public void move(){
-        int number_of_rotates = genes[new Random().nextInt(genes.length)];
+        int number_of_rotates = genes.get(new Random().nextInt(32));
 
 
         for( int i=0; i < number_of_rotates; i++){

@@ -35,11 +35,12 @@ class Statistics extends JPanel{
 
         graphics.drawString( "Number of animals: " + statisticsMap.number0fAnimals(), 10, 30);
         graphics.drawString("Number of grasses: " + statisticsMap.numberOfGrasses(), 10, 70);
-        graphics.drawString("Genes: ", 10, 110);
-        graphics.drawString(statisticsMap.getGenes() , 10, 130);
-//        graphics.drawString("Children: " + statisticsMap.reproduction() , 10, 170);
+        graphics.drawString("Dominant genes: ", 10, 110);
+        graphics.drawString(statisticsMap.getTheMostDominantGen() , 10, 130);
+        graphics.drawString("Average standard of living: " + statisticsMap.meanEnergy() , 10, 170);
         graphics.drawString("Passed days: " + daysPassed , 10, 210);
         daysPassed += 1;
+
     }
 
 
