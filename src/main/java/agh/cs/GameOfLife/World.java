@@ -14,6 +14,37 @@ import java.io.IOException;
 
 import static agh.cs.GameOfLife.MapDirection.NORTH;
 
+class Statistics extends JPanel{
+    private GrassField statisticsMap;
+    private int daysPassed;
+
+
+    Statistics(GrassField statisticsMap){
+        this.statisticsMap = statisticsMap;
+        daysPassed = 0;
+
+    }
+
+    @Override
+    public void paintComponent(java.awt.Graphics graphics){
+        super.paintComponent(graphics);
+        this.setSize(800, 800);
+        this.setLocation(0, 0);
+        Font myFont = new Font ("Courier New", 1, 14);
+        graphics.setFont(myFont);
+
+        graphics.drawString( "Number of animals: " + statisticsMap.number0fAnimals(), 10, 30);
+        graphics.drawString("Number of grasses: " + statisticsMap.numberOfGrasses(), 10, 70);
+        graphics.drawString("Genes: ", 10, 110);
+        graphics.drawString(statisticsMap.getGenes() , 10, 130);
+//        graphics.drawString("Children: " + statisticsMap.reproduction() , 10, 170);
+        graphics.drawString("Passed days: " + daysPassed , 10, 210);
+        daysPassed += 1;
+    }
+
+
+}
+
 class Cell extends JPanel {
     private IMapElement mapElement;
     private String element;
@@ -38,10 +69,10 @@ class Cell extends JPanel {
             graphics.setColor(new Color(114, 57, 6));
             graphics.fillRect(0, 0, getWidth() - 1, getHeight() - 1);
         } else if (element.equals("JungleGrass")) {
-            graphics.setColor(new Color(1, 36, 16));
+            graphics.setColor(new Color(20, 68, 25));
             graphics.fillRect(0, 0, getWidth() - 1, getHeight() - 1);
         } else if (element.equals("grass")) {
-            graphics.setColor(new Color(7, 104, 29));
+            graphics.setColor(new Color(2, 132, 32));
             graphics.fillRect(0, 0, getWidth() - 1, getHeight() - 1);
         }
 
@@ -58,16 +89,27 @@ class Cell extends JPanel {
 
 
 class Pane extends WindowAdapter {
-    Pane(JPanel p, JButton pauseButton) {
+    Pane(JPanel p, JButton pauseButton, JPanel stats) {
         JFrame f = new JFrame();
         pauseButton.setBounds(10, 10, 10, 10);
         Container contentPane = f.getContentPane();
         contentPane.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
-        f.setPreferredSize(new Dimension(1200, 1000));
+        f.setPreferredSize(new Dimension(2000, 1000));
+
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+//        pauseButton.setLocation(0, 0);
+//        p.setSize(new Dimension(1, 1));
+        f.add(pauseButton);
         f.add(p);
+        stats.setSize(1,1);
+
+
+        f.add(stats);
+
         f.pack();
         f.show();
-        f.add(pauseButton);
+
         f.setVisible(true);
     }
 }
@@ -97,6 +139,7 @@ public class World {
         final int height = Math.toIntExact((long)parameters.get("height"));
         final Cell[][] biosphere = new Cell[height][width];
         final JPanel gui = new JPanel(new GridLayout(height, width, 2, 2));
+
 //        gui.setPreferredSize();
         for (int ii = 0; ii < height; ii++) {
             for (int jj = 0; jj < width; jj++) {
@@ -109,8 +152,12 @@ public class World {
             }
         }
         gui.setPreferredSize(new Dimension(1000, 1000));
+
+
 //        gui.setMaximumSize(new Dimension(1000, 1000));
 
+        Statistics panel = new Statistics(worldMap);
+        panel.setPreferredSize(new Dimension(1000, 1000));
 
         ActionListener actionListener = (ActionEvent actionEvent) -> {
             if (!isPaused) {
@@ -125,8 +172,9 @@ public class World {
                         biosphere[ii][jj].setElement(worldMap.fff(ii, jj));
                     }
                 }
+                panel.repaint();
                 gui.repaint();
-                System.out.println(worldMap.number0fAnimals());
+
 
             }
             if (actionEvent.getSource() == pauseButton) {
@@ -135,13 +183,9 @@ public class World {
 
         };
 
-
         Timer timer = new Timer(1000, actionListener);
         timer.start();
-        Pane p = new Pane(gui, pauseButton);
+        Pane p = new Pane(gui, pauseButton, panel);
         pauseButton.addActionListener(actionListener);
-
-
-
     }
 }

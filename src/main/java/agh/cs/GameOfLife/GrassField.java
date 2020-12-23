@@ -37,51 +37,6 @@ public class GrassField extends AbstractWorldMap {
     }
 
 
-
-    public String toString(){
-        int minX = Integer.MAX_VALUE;
-        int minY = Integer.MAX_VALUE;
-        int maxX = Integer.MIN_VALUE;
-        int maxY = Integer.MIN_VALUE;
-        MapVisualizer v = new MapVisualizer(this);
-
-        for (Map.Entry<Vector2d,ArrayList<Animal>> entry: animals.entrySet()) {
-            ArrayList<Animal> animalList = entry.getValue();
-            for (Animal animal: animalList) {
-                if (animal.getPosition().x < minX) minX = animal.getPosition().x;
-                if (animal.getPosition().y < minY) minY= animal.getPosition().y;
-
-                if (animal.getPosition().x > maxX) maxX = animal.getPosition().x;
-                if (animal.getPosition().y > maxY) maxY= animal.getPosition().y;
-
-            }
-
-        }
-
-        for (Map.Entry<Vector2d,Grass> entry: grasses.entrySet()) {
-            Grass grass = entry.getValue();
-            if (grass.getPosition().x < minX) minX = grass.getPosition().x;
-            if (grass.getPosition().y < minY) minY= grass.getPosition().y;
-
-            if (grass.getPosition().x > maxX) maxX = grass.getPosition().x;
-            if (grass.getPosition().y > maxY) maxY = grass.getPosition().y;
-        }
-
-        return v.draw(new Vector2d(minX,minY), new Vector2d(maxX, maxY));
-    }
-
-//
-//    @Override
-//    public boolean isOccupied(Vector2d position) {
-//        boolean flag = isOccupiedBy(animals, position);
-//        if (!flag){
-//            return isOccupiedBy(grasses, position);
-//        }
-//        else{
-//            return true;
-//        }
-//    }
-//
     @Override
     public Object objectAt(Vector2d position) {
         Object object = null;
@@ -110,6 +65,10 @@ public class GrassField extends AbstractWorldMap {
     @Override
     public int getHeight() {
         return height;
+    }
+
+    public  int getNumberOfGrass(){
+        return numberOfGrass;
     }
 
     public void placeGrass() {
@@ -168,6 +127,19 @@ public class GrassField extends AbstractWorldMap {
                 }
             }    }
     }
+    public String getGenes(){
+        String gen = "";
+        HashMap<Vector2d, ArrayList<Animal>> animalCopy = new HashMap<Vector2d, ArrayList<Animal>>(animals);
+        for (Map.Entry<Vector2d, ArrayList<Animal>> entry : animalCopy.entrySet()) {
+            ArrayList<Animal> arrayCopy = new ArrayList<Animal>(entry.getValue());
+            for (Animal animal : arrayCopy) {
+                gen = animal.genes();
+            }
+        }
+        return gen;
+    }
+
+
     @Override
     public void movement (){
         HashMap<Vector2d, ArrayList<Animal>> animalCopy = new HashMap<Vector2d, ArrayList<Animal>>(animals);
@@ -208,7 +180,7 @@ public class GrassField extends AbstractWorldMap {
     public void positionChanged(Vector2d oldPosition, Vector2d newPosition) {
 
     }
-    public int number0fAnimals() {
+    public String number0fAnimals() {
         int x = 0;
 
         for (Map.Entry<Vector2d, ArrayList<Animal>> entry : animals.entrySet()) {
@@ -218,8 +190,15 @@ public class GrassField extends AbstractWorldMap {
 
             }
         }
-        return x;
+        return String.valueOf(x);
+    }
 
+    public String numberOfGrasses(){
+        int x = 0;
+        for (Map.Entry<Vector2d, Grass> entry : grasses.entrySet()) {
+            x += 1;
+        }
+        return String.valueOf(x);
 
     }
 }

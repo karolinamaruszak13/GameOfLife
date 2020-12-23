@@ -16,11 +16,6 @@ public class Grass implements IMapElement{
         return "grass";
     }
 
-
-    public String toString(){
-        return "*";
-//        return position.toString();
-    }
     public boolean equals(Object other){
         return this.toString().equals(other.toString());
     }

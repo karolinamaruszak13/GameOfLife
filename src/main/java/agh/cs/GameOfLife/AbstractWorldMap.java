@@ -16,19 +16,9 @@ abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObserver {
         return animals;
     }
 
-//    @Override
-//    public boolean canMoveTo(Vector2d position) {
-//        for (Map.Entry<Vector2d, ArrayList<Animal>> entry : animals.entrySet()) {
-//            ArrayList<Animal> a = entry.getValue();
-//            if (isOccupied(position) && a.getPosition() == position) {
-//                return false;
-//            }
-//        }
-//        return true;
-//    }
-
     @Override
     public void reproduction(){
+        int x = 0;
         HashMap<Vector2d, ArrayList<Animal>> animalCopy = new HashMap<Vector2d, ArrayList<Animal>>(animals);
         for (Map.Entry<Vector2d, ArrayList<Animal>> entry : animalCopy.entrySet()){
             ArrayList<Animal> a = entry.getValue();
@@ -54,33 +44,19 @@ abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObserver {
 
                 if(strongestAnimal1.getEnergy() >= 0.5*strongestAnimal1.getStartEnergy() && strongestAnimal2.getEnergy() >= 0.5*strongestAnimal2.getStartEnergy()){
                     Animal childAnimal = new Animal(this, strongestAnimal1.getPosition(), MapDirection.NORTH, (int)(0.25*strongestAnimal1.getEnergy() + 0.25*strongestAnimal2.getEnergy()), strongestAnimal1.getMoveEnergy(), strongestAnimal1.getPlantEnergy());
-
                     this.placeAnimal(childAnimal);
                     strongestAnimal1.setEnergy((int)(0.75*strongestAnimal1.getEnergy()));
                     strongestAnimal2.setEnergy((int)(0.75*strongestAnimal2.getEnergy()));
-
 
                 }
 
             }
         }
+
     }
 
 
-//    @Override
-//    public boolean place(Animal animal) {
-//        Vector2d position = animal.getPosition();
-////        for (Map.Entry<Vector2d, ArrayList<Animal>> entry : animals.entrySet()) {
-////            ArrayList<Animal> a = entry.getValue();
-////            if (a.getPosition().equals(position)) {
-////                throw new IllegalArgumentException(animal.getPosition() + " is occupied");
-////            }
-////        }
-//        animals.put(animal.getPosition(), animal);
-//        return true;
-//
-//
-//    }
+
     @Override
     public  void placeAnimal(Animal animal) {
         Vector2d position = animal.getPosition();
@@ -95,22 +71,6 @@ abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObserver {
         }
     }
 
-//    @Override
-//    public void run(MoveDirection[] directions) {
-//        Animal[] animals = getAnimals().values().toArray(new Animal[0]);
-//        for (int i = 0; i < directions.length; i++) {
-//            Animal animal = animals[i % animals.length];
-//            Vector2d position = animal.getPosition();
-//            getAnimals().remove(position);
-//            animal.move(directions[i]);
-//            if(animal.getEnergy() > 0) {
-//                getAnimals().put(animal.getPosition(), animal);
-//
-//            }
-//
-//        }
-//
-//    }
 
     @Override
     public void movement (){
@@ -128,29 +88,7 @@ abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObserver {
         }
     }
 
-//    @Override
-//    public abstract boolean isOccupied(Vector2d position);
-//
-//    static <T extends IMapElement> boolean isOccupiedBy(Map<Vector2d, ArrayList<T>> objects, Vector2d position) {
-//        for (Map.Entry<Vector2d, ArrayList<T>> entry : objects.entrySet()) {
-//            ArrayList<T> t = entry.getValue();
-//            if (t.getPosition().equals(position))
-//                return true;
-//        }
-//        return false;
-//    }
-//
-//    @Override
-//    public abstract Object objectAt(Vector2d position);
-//
-//    static <T extends IMapElement> Object _objectAt(Map<Vector2d, T> objects, Vector2d position) {
-//        for (Map.Entry<Vector2d, T> entry : objects.entrySet()) {
-//            T t = entry.getValue();
-//            if (t.getPosition().equals(position))
-//                return t;
-//        }
-//        return null;
-//    }
+
 
     @Override
     public void positionChanged(Vector2d oldPosition, Vector2d newPosition) {

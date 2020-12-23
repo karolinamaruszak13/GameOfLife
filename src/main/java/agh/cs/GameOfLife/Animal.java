@@ -1,5 +1,6 @@
 package agh.cs.GameOfLife;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 
@@ -41,7 +42,9 @@ public class Animal implements IMapElement {
         int max = 7;
         for (int i = 0; i < genes.length; i++) {
             genes[i] = (int)(Math.random() * (max - min + 1) + min);
+
         }
+
 
     }
 
@@ -49,9 +52,13 @@ public class Animal implements IMapElement {
         return this.toString().equals(other.toString());
     }
 
-
+    public String genes(){
+       return Arrays.toString(genes);
+    }
     public void move(){
         int number_of_rotates = genes[new Random().nextInt(genes.length)];
+
+
         for( int i=0; i < number_of_rotates; i++){
             orientation = orientation.next();
         }

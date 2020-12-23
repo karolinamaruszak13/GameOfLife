@@ -20,7 +20,7 @@ public interface IWorldMap {
      *            The animal to place on the map.
      * @return True if the animal was placed. The animal cannot be placed if the map is already occupied.
      */
-//    boolean place(Animal animal);
+
     void placeAnimal(Animal animal);
 
     /**
@@ -37,7 +37,7 @@ public interface IWorldMap {
      * confused with canMove since there might be empty positions where the animal
      * cannot move.
      *
-     * @param position
+
      *            Position to check.
      * @return True if the position is occupied.
      */
